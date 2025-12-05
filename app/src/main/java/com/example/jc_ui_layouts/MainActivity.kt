@@ -1,6 +1,7 @@
 package com.example.jc_ui_layouts
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -9,14 +10,24 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -30,35 +41,58 @@ class MainActivity : ComponentActivity() {
         setContent {
             JCUILayoutsTheme(darkTheme = false, dynamicColor = false) {
                 Surface(color = Color.White) {
-                    Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                        Column(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(innerPadding)
-                                .background(Color.White)
-                        ) {
-                            UILayoutScreen()
-                        }
-                    }
+                    UILayoutScreen()
                 }
             }
         }
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UILayoutScreen() {
-    Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
-        ConstraintLayoutSample()
-        
+    val context = LocalContext.current
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        topBar = {
+            TopAppBar(
+                title = { Text("TopAppBar", color = Color.White) },
+                colors = TopAppBarDefaults.topAppBarColors(MaterialTheme.colorScheme.primary)
+            )
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                containerColor = MaterialTheme.colorScheme.primary,
+                shape = CircleShape,
+                onClick = {
+                    Toast.makeText(context, "FAB Click", Toast.LENGTH_SHORT).show()
+                }
+            ) {
+                Icon(imageVector = Icons.Default.Add, contentDescription = "Add")
+            }
+        },
+        bottomBar = {
+            BottomAppBar(containerColor = MaterialTheme.colorScheme.primary) {
+                Text("Bottom App Bar", modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
+            }
+        }
+    ) { innerPadding ->
 
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .background(Color.White)
+        ) {
+            ConstraintLayoutSample()
+        }
     }
 }
 
 @Composable
 fun ConstraintLayoutSample() {
     ConstraintLayout(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth().padding(16.dp)
     ) {
         val (textTitle1, textValue1, textTitle2, textValue2) = createRefs()
 
